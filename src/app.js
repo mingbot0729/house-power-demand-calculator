@@ -2,7 +2,6 @@ import { DAYS, calculateDemandResult } from "./calculations.js";
 import { appliancePresets, categories } from "./presets.js";
 
 const STORAGE_KEY = "home-energy-studio-customers-v3";
-const LEGACY_STORAGE_KEY = "home-energy-studio-demand-v2";
 const allDayIds = DAYS.map((day) => day.id);
 
 const defaultConfig = {
@@ -69,18 +68,6 @@ function loadState() {
           ? saved.activeCustomerId
           : customers[0]?.id || null,
         customers,
-      };
-    }
-
-    const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY));
-    if (legacy?.appliances) {
-      const customer = createCustomer("Saved configuration", legacy);
-      return {
-        currentStep: 0,
-        selectedCategory: "All",
-        customerNameDraft: "",
-        activeCustomerId: customer.id,
-        customers: [customer],
       };
     }
   } catch {
