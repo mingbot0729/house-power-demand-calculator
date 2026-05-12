@@ -1,13 +1,13 @@
-const CACHE_NAME = "house-power-demand-v4";
+const CACHE_NAME = "house-power-demand-v5";
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/assets/icon.svg",
-  "/src/app.js",
-  "/src/calculations.js",
-  "/src/presets.js",
-  "/src/styles.css",
+  "./",
+  "index.html",
+  "manifest.webmanifest",
+  "assets/icon.svg",
+  "src/app.js",
+  "src/calculations.js",
+  "src/presets.js",
+  "src/styles.css",
 ];
 
 self.addEventListener("install", (event) => {
