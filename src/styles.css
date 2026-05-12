@@ -91,6 +91,10 @@ h2 {
   letter-spacing: 0;
 }
 
+.section-heading h2 {
+  font-size: clamp(1.16rem, 1.8vw, 1.6rem);
+}
+
 .eyebrow {
   margin-bottom: 8px;
   color: var(--green-dark);
@@ -376,7 +380,7 @@ h2 {
 .preset-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chips {
@@ -388,7 +392,7 @@ h2 {
 .primary,
 .danger-small {
   border-radius: 8px;
-  padding: 0 18px;
+  padding: 0 14px;
   font-weight: 800;
 }
 
@@ -432,15 +436,15 @@ h2 {
 
 .preset-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
 }
 
 .preset-card {
   display: grid;
-  min-height: 118px;
-  gap: 8px;
+  min-height: 92px;
+  gap: 6px;
   align-content: start;
-  padding: 16px;
+  padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -455,12 +459,18 @@ h2 {
 }
 
 .preset-card strong {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
+  line-height: 1.15;
+}
+
+.preset-card small {
+  font-size: 0.86rem;
+  line-height: 1.25;
 }
 
 .appliance-list {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   max-height: 610px;
   overflow: auto;
   padding-right: 4px;
@@ -468,27 +478,27 @@ h2 {
 
 .appliance-row {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
-  padding: 14px;
+  padding: 12px;
   min-width: 0;
 }
 
 .day-toggle-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+  gap: 6px;
 }
 
 .day-toggle {
-  min-height: 44px;
+  min-height: 38px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface-strong);
   color: var(--muted);
-  font-size: 0.86rem;
+  font-size: 0.78rem;
   font-weight: 850;
 }
 
@@ -500,8 +510,8 @@ h2 {
 
 .appliance-title {
   display: grid;
-  grid-template-columns: 1fr 46px;
-  gap: 10px;
+  grid-template-columns: 1fr 42px;
+  gap: 8px;
   align-items: center;
 }
 
@@ -511,8 +521,8 @@ h2 {
 
 .icon-button {
   display: grid;
-  width: 46px;
-  min-height: 46px;
+  width: 42px;
+  min-height: 42px;
   place-items: center;
   border-radius: 8px;
   background: #f6e7e2;
@@ -522,17 +532,17 @@ h2 {
 
 .row-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 8px;
 }
 
 .row-grid label {
   gap: 4px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
 }
 
 .row-grid input {
-  min-height: 44px;
+  min-height: 38px;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 0 10px;
@@ -918,8 +928,6 @@ h2 {
 
   .form-grid,
   .customer-create-form,
-  .preset-grid,
-  .row-grid,
   .metric-strip,
   .result-cards,
   .quick-summary,
@@ -1005,5 +1013,96 @@ h2 {
 
   .daily-chart {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .shell {
+    padding: 8px 10px 20px;
+  }
+
+  .app-header {
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  h1 {
+    font-size: clamp(1.55rem, 4vw, 2.25rem);
+  }
+
+  .stepper {
+    margin-bottom: 10px;
+  }
+
+  .active-customer-banner {
+    padding: 10px 12px;
+  }
+
+  .grid-two.wide-right {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 10px;
+  }
+
+  .section-heading {
+    margin-bottom: 10px;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+  }
+
+  .chips {
+    margin: 10px 0;
+  }
+
+  .chip,
+  .secondary,
+  .primary {
+    min-height: 40px;
+    padding: 0 10px;
+    font-size: 0.88rem;
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+
+  .preset-card {
+    min-height: 76px;
+    padding: 9px;
+  }
+
+  .preset-card strong {
+    font-size: 0.86rem;
+  }
+
+  .preset-card small,
+  .preset-card span {
+    font-size: 0.74rem;
+  }
+
+  .appliance-list {
+    max-height: none;
+  }
+
+  .appliance-row {
+    padding: 9px;
+  }
+
+  .appliance-row input {
+    min-height: 38px;
+    font-size: 0.9rem;
+  }
+
+  .row-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .day-toggle-row {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 }
