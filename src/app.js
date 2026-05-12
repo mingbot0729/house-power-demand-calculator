@@ -19,22 +19,12 @@ let state = loadState();
 let pendingReset = false;
 const app = document.querySelector("#app");
 
-function preserveApplianceListScroll(action) {
-  const list = app.querySelector(".appliance-list");
-  const scrollTop = list?.scrollTop || 0;
-  const pageScrollX = window.scrollX;
-  const pageScrollY = window.scrollY;
-  action();
-  const restore = () => {
-    const nextList = app.querySelector(".appliance-list");
-    if (nextList) nextList.scrollTop = scrollTop;
-    window.scrollTo(pageScrollX, pageScrollY);
-  };
-  restore();
-  requestAnimationFrame(restore);
-  requestAnimationFrame(() => requestAnimationFrame(restore));
-  setTimeout(restore, 80);
-  setTimeout(restore, 180);
+function scrollToPageTop() {
+  const jumpToTop = () => window.scrollTo(0, 0);
+  jumpToTop();
+  requestAnimationFrame(jumpToTop);
+  requestAnimationFrame(() => requestAnimationFrame(jumpToTop));
+  setTimeout(jumpToTop, 120);
 }
 
 function makeAppliance(preset, quantity = 1, activeDays = allDayIds) {
@@ -323,7 +313,7 @@ function renderActivityStep(result, config) {
           <div class="appliance-list">
             ${activeCustomer()
               ? config.appliances.length
-                ? `<p class="scroll-hint">${icon("scroll")} Scroll inside this Daily Activity list. Touch outside this panel to scroll the whole page.</p>${config.appliances.map(renderApplianceRow).join("")}`
+                ? config.appliances.map(renderApplianceRow).join("")
                 : emptyState("Add appliances from the library to begin.")
               : emptyState("Select or add a customer first.")}
           </div>
@@ -569,7 +559,7 @@ function bindEvents() {
   app.querySelectorAll("[data-day-appliance]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
-      preserveApplianceListScroll(() => toggleApplianceDay(button.dataset.dayAppliance, button.dataset.day));
+      toggleApplianceDay(button.dataset.dayAppliance, button.dataset.day);
     });
   });
 }
@@ -592,7 +582,16 @@ function handleAction(action) {
     }));
   }
   if (action === "next" && activeCustomer()) {
-    setState({ currentStep: state.currentStep === steps.length - 1 ? 1 : state.currentStep + 1 });
+    const nextStep = state.currentStep === steps.length - 1 ? 1 : state.currentStep + 1;
+    const shouldScrollToTop = state.currentStep === 1;
+    setState({ currentStep: nextStep });
+    if (shouldScrollToTop) {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, 0)));
+      });
+      setTimeout(() => window.scrollTo(0, 0), 100);
+    }
   }
   if (action === "customers") {
     setState({ currentStep: 0 });
