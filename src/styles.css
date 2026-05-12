@@ -18,6 +18,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 html {
   min-height: 100%;
   background: var(--paper);
@@ -144,6 +150,7 @@ h2 {
   background: rgba(255, 255, 255, 0.68);
   color: var(--muted);
   font-weight: 750;
+  min-width: 0;
 }
 
 .step span {
@@ -246,6 +253,7 @@ h2 {
   border-radius: 8px;
   background: #fff;
   padding: 12px;
+  min-width: 0;
 }
 
 .customer-card.selected {
@@ -262,6 +270,7 @@ h2 {
   background: transparent;
   color: var(--ink);
   text-align: left;
+  min-width: 0;
 }
 
 .customer-select span,
@@ -273,6 +282,7 @@ h2 {
 
 .customer-select strong {
   font-size: 1.35rem;
+  overflow-wrap: anywhere;
 }
 
 .activity-page {
@@ -292,6 +302,7 @@ h2 {
 
 .active-customer-banner h2 {
   font-size: clamp(1.8rem, 4vw, 3.2rem);
+  overflow-wrap: anywhere;
 }
 
 .active-customer-stats {
@@ -414,6 +425,7 @@ h2 {
   background: var(--surface);
   color: var(--ink);
   text-align: left;
+  min-width: 0;
 }
 
 .preset-card span,
@@ -440,6 +452,7 @@ h2 {
   border-radius: 8px;
   background: #fff;
   padding: 14px;
+  min-width: 0;
 }
 
 .day-toggle-row {
@@ -578,6 +591,7 @@ h2 {
   border-radius: 8px;
   background: #fff;
   padding: 16px;
+  min-width: 0;
 }
 
 .metric-card span,
@@ -591,6 +605,7 @@ h2 {
   color: var(--ink);
   font-size: clamp(1.45rem, 2.6vw, 2.25rem);
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .comparison {
@@ -806,12 +821,78 @@ h2 {
 
 @media (max-width: 640px) {
   .shell {
-    width: min(100% - 20px, 1180px);
-    padding-top: 16px;
+    width: 100%;
+    padding: 12px 10px 28px;
   }
 
   .panel {
-    padding: 18px;
+    padding: 14px;
+  }
+
+  .app-header {
+    gap: 14px;
+    padding-bottom: 14px;
+  }
+
+  h1 {
+    font-size: clamp(1.65rem, 9vw, 2.25rem);
+    line-height: 1;
+  }
+
+  h2,
+  .hero-result h2,
+  .active-customer-banner h2 {
+    font-size: clamp(1.2rem, 6vw, 1.65rem);
+    line-height: 1.08;
+  }
+
+  .eyebrow {
+    margin-bottom: 5px;
+    font-size: 0.72rem;
+  }
+
+  .muted,
+  .fine-print {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .header-metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .header-metrics span {
+    min-width: 0;
+  }
+
+  .stepper {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .step {
+    min-height: 42px;
+    gap: 4px;
+    padding: 0 4px;
+    font-size: 0.82rem;
+  }
+
+  .step span {
+    width: 22px;
+    height: 22px;
+    font-size: 0.72rem;
+  }
+
+  .customer-page,
+  .activity-page,
+  .grid-two,
+  .results-layout {
+    gap: 12px;
+  }
+
+  .customer-create-panel {
+    gap: 14px;
   }
 
   .form-grid,
@@ -825,10 +906,37 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .day-toggle-row,
+  .day-toggle-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .day-toggle {
+    min-width: 0;
+    padding: 0 4px;
+  }
+
   .daily-chart {
-    grid-template-columns: repeat(7, minmax(42px, 1fr));
-    overflow-x: auto;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 220px;
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .daily-bar span,
+  .daily-bar strong {
+    font-size: 0.72rem;
+  }
+
+  .active-customer-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .active-customer-stats span,
+  .active-customer-stats button {
+    min-width: 0;
+    width: 100%;
   }
 
   .comparison div {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "house-power-demand-v5";
+const CACHE_NAME = "house-power-demand-v6";
 const ASSETS = [
   "./",
   "index.html",

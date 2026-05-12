@@ -341,7 +341,7 @@ function renderApplianceRow(appliance) {
   return `
     <article class="appliance-row">
       <div class="appliance-title">
-        <input data-appliance="${appliance.id}" data-key="name" value="${escapeHtml(appliance.name)}" aria-label="Appliance name" />
+        <input data-appliance="${appliance.id}" data-key="name" value="${escapeHtml(appliance.name)}" aria-label="Appliance name" data-defer-update="true" />
         <button class="icon-button" data-remove="${appliance.id}" aria-label="Remove appliance">x</button>
       </div>
       <div class="row-grid">
@@ -474,7 +474,7 @@ function field(label, path, value, type = "text", suffix = "", attrs = "") {
     <label class="field">
       <span>${label}</span>
       <div>
-        <input data-path="${path}" type="${type}" value="${escapeHtml(value)}" ${attrs} />
+        <input data-path="${path}" type="${type}" value="${escapeHtml(value)}" ${type === "text" ? 'data-defer-update="true"' : ""} ${attrs} />
         ${suffix ? `<small>${suffix}</small>` : ""}
       </div>
     </label>
@@ -485,7 +485,7 @@ function smallField(label, applianceId, key, value, attrs = "") {
   return `
     <label>
       <span>${label}</span>
-      <input data-appliance="${applianceId}" data-key="${key}" type="number" value="${value}" min="0" ${attrs} />
+      <input data-appliance="${applianceId}" data-key="${key}" type="number" value="${value}" min="0" ${key === "name" ? 'data-defer-update="true"' : ""} ${attrs} />
     </label>
   `;
 }
@@ -507,6 +507,11 @@ function bindEvents() {
   });
 
   app.querySelectorAll("[data-path]").forEach((input) => {
+    if (input.dataset.deferUpdate) {
+      input.addEventListener("input", () => updatePathSilently(input.dataset.path, input.value, input.type));
+      input.addEventListener("change", () => render());
+      return;
+    }
     input.addEventListener("input", () => updatePath(input.dataset.path, input.value, input.type));
   });
 
@@ -544,6 +549,13 @@ function bindEvents() {
   });
 
   app.querySelectorAll("[data-appliance]").forEach((input) => {
+    if (input.dataset.deferUpdate) {
+      input.addEventListener("input", () =>
+        updateApplianceSilently(input.dataset.appliance, input.dataset.key, input.value, input.type),
+      );
+      input.addEventListener("change", () => render());
+      return;
+    }
     input.addEventListener("input", () => {
       updateActiveCustomer((customer) => ({
         appliances: customer.appliances.map((appliance) =>
@@ -562,7 +574,8 @@ function bindEvents() {
 
 function handleAction(action) {
   if (action === "add-customer") {
-    const name = state.customerNameDraft.trim();
+    const inputName = app.querySelector('[data-path="customerNameDraft"]')?.value || "";
+    const name = (state.customerNameDraft || inputName).trim();
     if (!name) return;
     const customer = createCustomer(name);
     setState((current) => ({
@@ -628,6 +641,34 @@ function updatePath(path, value, inputType) {
   if (path === "diversityFactor") {
     updateActiveCustomer(() => ({ diversityFactor: normalized }));
   }
+}
+
+function updatePathSilently(path, value, inputType) {
+  const normalized = normalizeValue(value, inputType);
+
+  if (path === "customerNameDraft") {
+    state = { ...state, customerNameDraft: normalized };
+    return;
+  }
+}
+
+function updateApplianceSilently(applianceId, key, value, inputType) {
+  const normalized = normalizeValue(value, inputType);
+
+  state = {
+    ...state,
+    customers: state.customers.map((customer) => {
+      if (customer.id !== state.activeCustomerId) return customer;
+      return {
+        ...customer,
+        updatedAt: new Date().toISOString(),
+        appliances: customer.appliances.map((appliance) =>
+          appliance.id === applianceId ? { ...appliance, [key]: normalized } : appliance,
+        ),
+      };
+    }),
+  };
+  saveState();
 }
 
 function normalizeValue(value, inputType) {
