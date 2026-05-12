@@ -1,4 +1,4 @@
-const CACHE_NAME = "house-power-demand-v13";
+const CACHE_NAME = "house-power-demand-v14";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

@@ -6,19 +6,7 @@ const allDayIds = DAYS.map((day) => day.id);
 
 const defaultConfig = {
   diversityFactor: 0.75,
-  appliances: [
-    makeAppliance(appliancePresets.find((preset) => preset.id === "lighting"), 24),
-    makeAppliance(appliancePresets.find((preset) => preset.id === "refrigerator"), 1),
-    makeAppliance(appliancePresets.find((preset) => preset.id === "air-conditioner"), 3, [
-      "mon",
-      "tue",
-      "wed",
-      "thu",
-      "fri",
-    ]),
-    makeAppliance(appliancePresets.find((preset) => preset.id === "water-heater"), 2),
-    makeAppliance(appliancePresets.find((preset) => preset.id === "router"), 1),
-  ],
+  appliances: [],
 };
 
 const steps = [
@@ -276,7 +264,6 @@ function renderActivityStep(result, config) {
               <p class="eyebrow">Appliance library</p>
               <h2>${icon("plug")} Add appliances to the activity schedule.</h2>
             </div>
-            <button class="secondary" data-action="clear-appliances" ${activeCustomer() ? "" : "disabled"}>${icon("trash")} Clear</button>
           </div>
           <div class="chips">
             ${categoryOptions
@@ -313,6 +300,7 @@ function renderActivityStep(result, config) {
               <p class="eyebrow">Daily activity</p>
               <h2>${icon("calendar")} ${config.appliances.length} loads, ${number(result.weeklyKWh)} kWh/week</h2>
             </div>
+            <button class="secondary" data-action="clear-appliances" ${activeCustomer() && config.appliances.length ? "" : "disabled"}>${icon("trash")} Clear</button>
           </div>
           <div class="appliance-list">
             ${activeCustomer()
