@@ -510,43 +510,6 @@ h2 {
 .appliance-list {
   display: grid;
   gap: 10px;
-  max-height: 610px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  padding: 0 8px 8px 0;
-  scrollbar-color: var(--green) var(--surface-strong);
-  scrollbar-width: thin;
-}
-
-.appliance-list::-webkit-scrollbar {
-  width: 10px;
-}
-
-.appliance-list::-webkit-scrollbar-track {
-  background: var(--surface-strong);
-  border-radius: 999px;
-}
-
-.appliance-list::-webkit-scrollbar-thumb {
-  border: 2px solid var(--surface-strong);
-  border-radius: 999px;
-  background: var(--green);
-}
-
-.scroll-hint {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 10px;
-  border: 1.5px dashed var(--line-strong);
-  border-radius: 8px;
-  background: rgba(247, 245, 239, 0.94);
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 750;
 }
 
 .appliance-row {
