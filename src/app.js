@@ -19,6 +19,24 @@ let state = loadState();
 let pendingReset = false;
 const app = document.querySelector("#app");
 
+function preserveApplianceListScroll(action) {
+  const list = app.querySelector(".appliance-list");
+  const scrollTop = list?.scrollTop || 0;
+  const pageScrollX = window.scrollX;
+  const pageScrollY = window.scrollY;
+  action();
+  const restore = () => {
+    const nextList = app.querySelector(".appliance-list");
+    if (nextList) nextList.scrollTop = scrollTop;
+    window.scrollTo(pageScrollX, pageScrollY);
+  };
+  restore();
+  requestAnimationFrame(restore);
+  requestAnimationFrame(() => requestAnimationFrame(restore));
+  setTimeout(restore, 80);
+  setTimeout(restore, 180);
+}
+
 function makeAppliance(preset, quantity = 1, activeDays = allDayIds) {
   return {
     id: crypto.randomUUID(),
@@ -331,7 +349,7 @@ function renderApplianceRow(appliance) {
       <div class="day-toggle-row" aria-label="Active days for ${escapeHtml(appliance.name)}">
         ${DAYS.map(
           (day) => `
-            <button class="day-toggle ${appliance.activeDays.includes(day.id) ? "selected" : ""}" data-day="${day.id}" data-day-appliance="${appliance.id}">
+            <button type="button" class="day-toggle ${appliance.activeDays.includes(day.id) ? "selected" : ""}" data-day="${day.id}" data-day-appliance="${appliance.id}">
               ${day.label}
             </button>
           `,
@@ -549,7 +567,10 @@ function bindEvents() {
   });
 
   app.querySelectorAll("[data-day-appliance]").forEach((button) => {
-    button.addEventListener("click", () => toggleApplianceDay(button.dataset.dayAppliance, button.dataset.day));
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      preserveApplianceListScroll(() => toggleApplianceDay(button.dataset.dayAppliance, button.dataset.day));
+    });
   });
 }
 
