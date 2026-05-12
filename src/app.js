@@ -465,8 +465,8 @@ function renderFooter() {
         ${pendingReset ? "Confirm clear all" : "Reset all"}
       </button>
       <div>
-        ${pendingReset ? '<button class="secondary compact-action" data-action="cancel-reset">Cancel</button>' : ""}
-        <button class="secondary" data-action="back" ${state.currentStep === 0 ? "disabled" : ""}>Back</button>
+      ${pendingReset ? '<button class="secondary compact-action" data-action="cancel-reset">Cancel</button>' : ""}
+        <button class="secondary" data-action="home" ${state.currentStep === 0 ? "disabled" : ""}>Back to home</button>
         <button class="primary" data-action="next" ${!hasActiveCustomer ? "disabled" : ""}>${state.currentStep === steps.length - 1 ? "Review again" : "Next"}</button>
       </div>
     </footer>
@@ -580,10 +580,10 @@ function handleAction(action) {
   if (action === "next" && activeCustomer()) {
     setState({ currentStep: state.currentStep === steps.length - 1 ? 0 : state.currentStep + 1 });
   }
-  if (action === "back") {
-    setState({ currentStep: Math.max(0, state.currentStep - 1) });
-  }
   if (action === "customers") {
+    setState({ currentStep: 0 });
+  }
+  if (action === "home") {
     setState({ currentStep: 0 });
   }
   if (action === "reset") {
