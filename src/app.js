@@ -142,6 +142,11 @@ function number(value, digits = 2) {
   }).format(value || 0);
 }
 
+function getTotalApplianceQuantity(appliances) {
+  if (!Array.isArray(appliances)) return 0;
+  return appliances.reduce((sum, appliance) => sum + (Number(appliance.quantity) || 0), 0);
+}
+
 function render() {
   const config = activeConfig();
   const result = calculateDemandResult({
@@ -232,13 +237,14 @@ function renderCustomerCard(customer) {
     diversityFactor: customer.diversityFactor,
   });
   const isActive = customer.id === state.activeCustomerId;
+  const totalAppliances = getTotalApplianceQuantity(customer.appliances);
 
   return `
     <article class="customer-card ${isActive ? "selected" : ""}">
       <button class="customer-select" data-select-customer="${customer.id}">
         <span>${isActive ? "Selected" : "Tap to select"}</span>
         <strong>${icon("home")} ${escapeHtml(customer.name)}</strong>
-        <small>${customer.appliances.length} appliances • ${number(result.weeklyKWh)} kWh/week • updated ${formatDate(customer.updatedAt)}</small>
+        <small>${totalAppliances} appliances • ${number(result.weeklyKWh)} kWh/week • updated ${formatDate(customer.updatedAt)}</small>
       </button>
       <button class="secondary" data-open-customer="${customer.id}">${icon("settings")} Configure</button>
       <button class="icon-button" data-delete-customer="${customer.id}" aria-label="Delete ${escapeHtml(customer.name)}">x</button>
@@ -260,7 +266,7 @@ function renderActivityStep(result, config) {
           <h2>${icon("home")} ${escapeHtml(activeCustomer()?.name || "No customer selected")}</h2>
         </div>
         <div class="active-customer-stats">
-          <span><strong>${config.appliances.length}</strong> appliances</span>
+          <span><strong>${getTotalApplianceQuantity(config.appliances)}</strong> appliances</span>
           <span><strong>${number(result.weeklyKWh)}</strong> kWh/week</span>
           <button class="secondary" data-action="customers">${icon("users")} Change customer</button>
         </div>
@@ -306,7 +312,7 @@ function renderActivityStep(result, config) {
           <div class="section-heading">
             <div>
               <p class="eyebrow">Daily activity</p>
-              <h2>${icon("calendar")} ${config.appliances.length} loads, ${number(result.weeklyKWh)} kWh/week</h2>
+              <h2>${icon("calendar")} ${getTotalApplianceQuantity(config.appliances)} loads, ${number(result.weeklyKWh)} kWh/week</h2>
             </div>
             <button class="secondary" data-action="clear-appliances" ${activeCustomer() && config.appliances.length ? "" : "disabled"}>${icon("trash")} Clear all</button>
           </div>
@@ -376,7 +382,7 @@ function renderResultsStep(result, config) {
         <h2>Editable demand inputs</h2>
         <dl>
           <div><dt>Customer</dt><dd>${escapeHtml(activeCustomer()?.name || "None selected")}</dd></div>
-          <div><dt>Appliance count</dt><dd>${config.appliances.length} selected loads</dd></div>
+          <div><dt>Appliance count</dt><dd>${getTotalApplianceQuantity(config.appliances)} selected loads</dd></div>
           <div><dt>Diversity factor</dt><dd>${config.diversityFactor}</dd></div>
           <div><dt>Demand method</dt><dd>Quantity x watts x hours x duty cycle x selected days</dd></div>
           <div><dt>Peak method</dt><dd>Highest active-day connected load x diversity factor</dd></div>
