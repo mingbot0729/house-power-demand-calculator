@@ -29,6 +29,7 @@ const steps = [
 ];
 
 let state = loadState();
+let pendingReset = false;
 const app = document.querySelector("#app");
 
 function makeAppliance(preset, quantity = 1, activeDays = allDayIds) {
@@ -460,8 +461,11 @@ function renderFooter() {
   const hasActiveCustomer = Boolean(activeCustomer());
   return `
     <footer class="footer-actions">
-      <button class="secondary" data-action="reset">Reset all</button>
+      <button class="danger-small ${pendingReset ? "confirming" : ""}" data-action="${pendingReset ? "confirm-reset" : "reset"}">
+        ${pendingReset ? "Confirm clear all" : "Reset all"}
+      </button>
       <div>
+        ${pendingReset ? '<button class="secondary compact-action" data-action="cancel-reset">Cancel</button>' : ""}
         <button class="secondary" data-action="back" ${state.currentStep === 0 ? "disabled" : ""}>Back</button>
         <button class="primary" data-action="next" ${!hasActiveCustomer ? "disabled" : ""}>${state.currentStep === steps.length - 1 ? "Review again" : "Next"}</button>
       </div>
@@ -557,6 +561,10 @@ function bindEvents() {
 }
 
 function handleAction(action) {
+  if (action !== "reset" && action !== "confirm-reset" && action !== "cancel-reset") {
+    pendingReset = false;
+  }
+
   if (action === "add-customer") {
     const inputName = app.querySelector('[data-path="customerNameDraft"]')?.value || "";
     const name = (state.customerNameDraft || inputName).trim();
@@ -579,8 +587,17 @@ function handleAction(action) {
     setState({ currentStep: 0 });
   }
   if (action === "reset") {
+    pendingReset = true;
+    render();
+  }
+  if (action === "cancel-reset") {
+    pendingReset = false;
+    render();
+  }
+  if (action === "confirm-reset") {
     localStorage.removeItem(STORAGE_KEY);
     state = loadState();
+    pendingReset = false;
     render();
   }
   if (action === "clear-appliances" && activeCustomer()) {

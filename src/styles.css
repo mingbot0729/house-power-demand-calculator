@@ -385,7 +385,8 @@ h2 {
 
 .chip,
 .secondary,
-.primary {
+.primary,
+.danger-small {
   border-radius: 8px;
   padding: 0 18px;
   font-weight: 800;
@@ -407,6 +408,26 @@ h2 {
   border: 1px solid var(--line);
   background: #fff;
   color: var(--green-dark);
+}
+
+.danger-small {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid #e7c9c4;
+  background: #fff7f5;
+  color: #9d3b2f;
+  font-size: 0.86rem;
+}
+
+.danger-small.confirming {
+  min-height: 44px;
+  background: #9d3b2f;
+  color: #fff;
+}
+
+.compact-action {
+  min-height: 42px;
+  padding: 0 12px;
 }
 
 .preset-grid {
@@ -962,8 +983,14 @@ h2 {
   }
 
   .footer-actions div,
-  .footer-actions button {
+  .footer-actions .primary,
+  .footer-actions .secondary {
     width: 100%;
+  }
+
+  .footer-actions .danger-small {
+    align-self: flex-start;
+    width: auto;
   }
 }
 
