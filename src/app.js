@@ -23,9 +23,9 @@ const defaultConfig = {
 };
 
 const steps = [
-  { id: "customers", label: "Customers" },
-  { id: "activity", label: "Appliances" },
-  { id: "results", label: "Results" },
+  { id: "customers", label: "Customers", icon: "users" },
+  { id: "activity", label: "Appliances", icon: "plug" },
+  { id: "results", label: "Results", icon: "chart" },
 ];
 
 let state = loadState();
@@ -198,6 +198,7 @@ function renderStepper() {
           (step, index) => `
             <button class="step ${index === state.currentStep ? "active" : ""}" data-step="${index}">
               <span>${index + 1}</span>
+              ${icon(step.icon)}
               ${step.label}
             </button>
           `,
@@ -219,12 +220,12 @@ function renderCustomerStep() {
       <section class="panel customer-create-panel">
         <div>
           <p class="eyebrow">Customer profile</p>
-          <h2>Add customer profile before configuring appliances.</h2>
+          <h2>${icon("users")} Add customer profile before configuring appliances.</h2>
           <p class="muted">Each customer keeps their own appliance list, schedule, hours, and power settings.</p>
         </div>
         <div class="customer-create-form">
           ${field("Customer name", "customerNameDraft", state.customerNameDraft, "text", "Name or house label")}
-          <button class="primary" data-action="add-customer">Add customer</button>
+          <button class="primary" data-action="add-customer">${icon("plus")} Add customer</button>
         </div>
       </section>
       <section class="panel customer-list-panel">
@@ -253,10 +254,10 @@ function renderCustomerCard(customer) {
     <article class="customer-card ${isActive ? "selected" : ""}">
       <button class="customer-select" data-select-customer="${customer.id}">
         <span>${isActive ? "Selected" : "Tap to select"}</span>
-        <strong>${escapeHtml(customer.name)}</strong>
+        <strong>${icon("home")} ${escapeHtml(customer.name)}</strong>
         <small>${customer.appliances.length} appliances • ${number(result.weeklyKWh)} kWh/week • updated ${formatDate(customer.updatedAt)}</small>
       </button>
-      <button class="secondary" data-open-customer="${customer.id}">Configure</button>
+      <button class="secondary" data-open-customer="${customer.id}">${icon("settings")} Configure</button>
       <button class="icon-button" data-delete-customer="${customer.id}" aria-label="Delete ${escapeHtml(customer.name)}">x</button>
     </article>
   `;
@@ -273,12 +274,12 @@ function renderActivityStep(result, config) {
       <section class="panel active-customer-banner">
         <div>
           <p class="eyebrow">Currently configuring</p>
-          <h2>${escapeHtml(activeCustomer()?.name || "No customer selected")}</h2>
+          <h2>${icon("home")} ${escapeHtml(activeCustomer()?.name || "No customer selected")}</h2>
         </div>
         <div class="active-customer-stats">
           <span><strong>${config.appliances.length}</strong> appliances</span>
           <span><strong>${number(result.weeklyKWh)}</strong> kWh/week</span>
-          <button class="secondary" data-action="customers">Change customer</button>
+          <button class="secondary" data-action="customers">${icon("users")} Change customer</button>
         </div>
       </section>
       <div class="grid-two wide-right">
@@ -286,9 +287,9 @@ function renderActivityStep(result, config) {
           <div class="section-heading">
             <div>
               <p class="eyebrow">Appliance library</p>
-              <h2>Add appliances to the activity schedule.</h2>
+              <h2>${icon("plug")} Add appliances to the activity schedule.</h2>
             </div>
-            <button class="secondary" data-action="clear-appliances" ${activeCustomer() ? "" : "disabled"}>Clear</button>
+            <button class="secondary" data-action="clear-appliances" ${activeCustomer() ? "" : "disabled"}>${icon("trash")} Clear</button>
           </div>
           <div class="chips">
             ${categoryOptions
@@ -316,13 +317,14 @@ function renderActivityStep(result, config) {
           </div>
           <div class="demand-setting">
             ${field("Peak diversity factor", "diversityFactor", config.diversityFactor, "number", "0 to 1", "step=\"0.05\" max=\"1\"")}
+            <p class="helper-text">How much of the connected load may run at the same time. Use 1 for worst case.</p>
           </div>
         </section>
         <section class="panel">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Daily activity</p>
-              <h2>${config.appliances.length} loads, ${number(result.weeklyKWh)} kWh/week</h2>
+              <h2>${icon("calendar")} ${config.appliances.length} loads, ${number(result.weeklyKWh)} kWh/week</h2>
             </div>
           </div>
           <div class="appliance-list">
@@ -349,7 +351,7 @@ function renderApplianceRow(appliance) {
         ${smallField("Qty", appliance.id, "quantity", appliance.quantity)}
         ${smallField("Watts", appliance.id, "wattage", appliance.wattage)}
         ${smallField("Hours/day", appliance.id, "hoursPerDay", appliance.hoursPerDay, "step=\"0.25\"")}
-        ${smallField("Duty", appliance.id, "dutyCycle", appliance.dutyCycle, "step=\"0.05\" max=\"1\"")}
+        ${smallField("Duty", appliance.id, "dutyCycle", appliance.dutyCycle, "step=\"0.05\" max=\"1\"", "Actual running ratio. 1 = full time.")}
       </div>
       <div class="day-toggle-row" aria-label="Active days for ${escapeHtml(appliance.name)}">
         ${DAYS.map(
@@ -380,7 +382,7 @@ function renderResultsStep(result, config) {
       </section>
       <section class="panel">
         <p class="eyebrow">Load breakdown</p>
-        <h2>Weekly usage by category</h2>
+        <h2>${icon("chart")} Weekly usage by category</h2>
         ${renderDonut(result)}
         <div class="breakdown-list">
           ${result.categoryBreakdown.length ? result.categoryBreakdown.map(renderBreakdownItem).join("") : emptyState("No appliance loads selected.")}
@@ -485,17 +487,32 @@ function field(label, path, value, type = "text", suffix = "", attrs = "") {
   `;
 }
 
-function smallField(label, applianceId, key, value, attrs = "") {
+function smallField(label, applianceId, key, value, attrs = "", help = "") {
   return `
     <label>
       <span>${label}</span>
       <input data-appliance="${applianceId}" data-key="${key}" type="number" value="${value}" min="0" ${key === "name" ? 'data-defer-update="true"' : ""} ${attrs} />
+      ${help ? `<small class="field-help">${help}</small>` : ""}
     </label>
   `;
 }
 
 function emptyState(message) {
   return `<div class="empty-state">${message}</div>`;
+}
+
+function icon(name) {
+  const paths = {
+    users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    plug: '<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a6 6 0 0 1-12 0V8Z"/>',
+    chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-7"/>',
+    plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+    home: '<path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
+    settings: '<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05a2 2 0 1 1-2.83 2.83l-.05-.05A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.08A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.05.05a2 2 0 1 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.08A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.05-.05a2 2 0 1 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.08A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.05-.05a2 2 0 1 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9c.35.14.7.35 1 .6.3.3.45.7.4 1.1V11a2 2 0 1 1 0 4h-.08a1.7 1.7 0 0 0-1.32 0Z"/>',
+    trash: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/>',
+    calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>',
+  };
+  return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || ""}</svg>`;
 }
 
 function bindEvents() {
