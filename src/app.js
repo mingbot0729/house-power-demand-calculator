@@ -305,7 +305,7 @@ function renderActivityStep(result, config) {
           <div class="appliance-list">
             ${activeCustomer()
               ? config.appliances.length
-                ? config.appliances.map(renderApplianceRow).join("")
+                ? `<p class="scroll-hint">${icon("scroll")} Scroll inside this Daily Activity list. Touch outside this panel to scroll the whole page.</p>${config.appliances.map(renderApplianceRow).join("")}`
                 : emptyState("Add appliances from the library to begin.")
               : emptyState("Select or add a customer first.")}
           </div>
@@ -486,6 +486,7 @@ function icon(name) {
     settings: '<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05a2 2 0 1 1-2.83 2.83l-.05-.05A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.08A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.05.05a2 2 0 1 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.08A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.05-.05a2 2 0 1 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.08A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.05-.05a2 2 0 1 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9c.35.14.7.35 1 .6.3.3.45.7.4 1.1V11a2 2 0 1 1 0 4h-.08a1.7 1.7 0 0 0-1.32 0Z"/>',
     trash: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/>',
     calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>',
+    scroll: '<path d="M8 3h8a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="m12 17 2-2"/><path d="m12 17-2-2"/>',
   };
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || ""}</svg>`;
 }
