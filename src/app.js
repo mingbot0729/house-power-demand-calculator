@@ -300,7 +300,7 @@ function renderActivityStep(result, config) {
               <p class="eyebrow">Daily activity</p>
               <h2>${icon("calendar")} ${config.appliances.length} loads, ${number(result.weeklyKWh)} kWh/week</h2>
             </div>
-            <button class="secondary" data-action="clear-appliances" ${activeCustomer() && config.appliances.length ? "" : "disabled"}>${icon("trash")} Clear</button>
+            <button class="secondary" data-action="clear-appliances" ${activeCustomer() && config.appliances.length ? "" : "disabled"}>${icon("trash")} Clear all</button>
           </div>
           <div class="appliance-list">
             ${activeCustomer()
