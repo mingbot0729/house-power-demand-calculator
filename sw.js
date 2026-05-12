@@ -1,18 +1,7 @@
-const CACHE_NAME = "house-power-demand-v6";
-const ASSETS = [
-  "./",
-  "index.html",
-  "manifest.webmanifest",
-  "assets/icon.svg",
-  "src/app.js",
-  "src/calculations.js",
-  "src/presets.js",
-  "src/styles.css",
-];
+const CACHE_NAME = "house-power-demand-v7";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
 self.addEventListener("activate", (event) => {
@@ -20,21 +9,14 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((names) =>
-        Promise.all(names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))),
+        Promise.all(names.map((name) => caches.delete(name))),
       )
-      .then(() => self.clients.claim()),
+      .then(() => self.clients.claim())
+      .then(() => self.registration.unregister()),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        return response;
-      })
-      .catch(() => caches.match(event.request)),
-  );
+  event.respondWith(fetch(event.request));
 });

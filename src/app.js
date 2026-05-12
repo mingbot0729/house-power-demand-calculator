@@ -507,12 +507,8 @@ function bindEvents() {
   });
 
   app.querySelectorAll("[data-path]").forEach((input) => {
-    if (input.dataset.deferUpdate) {
-      input.addEventListener("input", () => updatePathSilently(input.dataset.path, input.value, input.type));
-      input.addEventListener("change", () => render());
-      return;
-    }
-    input.addEventListener("input", () => updatePath(input.dataset.path, input.value, input.type));
+    input.addEventListener("input", () => updatePathSilently(input.dataset.path, input.value, input.type));
+    input.addEventListener("change", () => render());
   });
 
   app.querySelectorAll("[data-category]").forEach((button) => {
@@ -549,22 +545,10 @@ function bindEvents() {
   });
 
   app.querySelectorAll("[data-appliance]").forEach((input) => {
-    if (input.dataset.deferUpdate) {
-      input.addEventListener("input", () =>
-        updateApplianceSilently(input.dataset.appliance, input.dataset.key, input.value, input.type),
-      );
-      input.addEventListener("change", () => render());
-      return;
-    }
-    input.addEventListener("input", () => {
-      updateActiveCustomer((customer) => ({
-        appliances: customer.appliances.map((appliance) =>
-          appliance.id === input.dataset.appliance
-            ? { ...appliance, [input.dataset.key]: normalizeValue(input.value, input.type) }
-            : appliance,
-        ),
-      }));
-    });
+    input.addEventListener("input", () =>
+      updateApplianceSilently(input.dataset.appliance, input.dataset.key, input.value, input.type),
+    );
+    input.addEventListener("change", () => render());
   });
 
   app.querySelectorAll("[data-day-appliance]").forEach((button) => {
@@ -649,6 +633,18 @@ function updatePathSilently(path, value, inputType) {
   if (path === "customerNameDraft") {
     state = { ...state, customerNameDraft: normalized };
     return;
+  }
+
+  if (path === "diversityFactor") {
+    state = {
+      ...state,
+      customers: state.customers.map((customer) =>
+        customer.id === state.activeCustomerId
+          ? { ...customer, diversityFactor: normalized, updatedAt: new Date().toISOString() }
+          : customer,
+      ),
+    };
+    saveState();
   }
 }
 

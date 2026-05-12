@@ -194,12 +194,12 @@ h2 {
 
 .grid-two {
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 
 .grid-two.wide-right {
-  grid-template-columns: 0.85fr 1.15fr;
+  grid-template-columns: 1fr;
 }
 
 .section-heading {
@@ -411,7 +411,7 @@ h2 {
 
 .preset-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
 }
 
 .preset-card {
@@ -457,7 +457,7 @@ h2 {
 
 .day-toggle-row {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
   gap: 8px;
 }
 
@@ -501,7 +501,7 @@ h2 {
 
 .row-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   gap: 10px;
 }
 
@@ -770,7 +770,7 @@ h2 {
   gap: 10px;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1100px), (orientation: portrait) {
   .app-header,
   .intro-panel,
   .customer-create-panel,
@@ -813,13 +813,13 @@ h2 {
   }
 
   .stepper {
-    grid-template-columns: repeat(3, minmax(150px, 1fr));
-    overflow-x: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
     padding-bottom: 6px;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .shell {
     width: 100%;
     padding: 12px 10px 28px;
@@ -906,8 +906,12 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .day-toggle-row {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .section-heading {
+    display: grid;
+  }
+
+  .section-heading .secondary {
+    width: 100%;
   }
 
   .day-toggle {
@@ -960,5 +964,19 @@ h2 {
   .footer-actions div,
   .footer-actions button {
     width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .shell {
+    padding-inline: 8px;
+  }
+
+  .day-toggle-row {
+    grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+  }
+
+  .daily-chart {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
