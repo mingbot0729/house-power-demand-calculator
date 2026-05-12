@@ -595,7 +595,7 @@ function handleAction(action) {
     }));
   }
   if (action === "next" && activeCustomer()) {
-    setState({ currentStep: state.currentStep === steps.length - 1 ? 0 : state.currentStep + 1 });
+    setState({ currentStep: state.currentStep === steps.length - 1 ? 1 : state.currentStep + 1 });
   }
   if (action === "customers") {
     setState({ currentStep: 0 });
